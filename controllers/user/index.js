@@ -1,7 +1,5 @@
 const { saveUser, getUser, updateUser } = require('../../models/index').userModule;
-const { getProduct } = require('../../models').productModule;
-const { createOrder, getAllOrder } = require('../../models').orderModule;
-const { createCart, getCart } = require('../../models').cartModule;
+const { createCutomer } = require('../../models/index').transactionModule;
 const { errorResponse, succesResponse } = require('../../services/response');
 const { bcryptHash, bcryptVerify } = require('../../services/crypto');
 const { jwtSign, jwtVerify } = require('../../services/jwt');
@@ -28,6 +26,8 @@ module.exports={
             const USER_DATA = await getUser({Email: Email});
             if(!USER_DATA){
                 const HASH_VALUE = bcryptHash(Password, 10);
+                const STRIPE_DATA = await createCutomer(Email);
+                req.body.Stripe_Customer_Id = STRIPE_DATA.id
                 req.body.Password = HASH_VALUE;
                 const VERIFICATION_CODE = await getVerificationCode();
                 req.body.Verification_Code = VERIFICATION_CODE;
@@ -78,6 +78,7 @@ module.exports={
             const payload = {
                 Email: USER_DATA.Email,
                 _id: USER_DATA._id,
+                Stripe_Customer_Id: USER_DATA.Stripe_Customer_Id,
                 roles: 'User'
             }
             const TOKEN = await jwtSign(payload);
@@ -121,61 +122,4 @@ module.exports={
         await updateUser(USER_DATA._id, req.body)
         return succesResponse(res, 200, 'Reset user password successfully!');
     },
-
-    /** function for create order */
-    async createOrder(req, res){
-        const ID = req.params.id;
-        const { Order_Ship_Name, Order_Ship_Address, City, State, Zip, Country, Phone, Email, Order_Type, Product_Quantity } = req.body;
-        if(!ID) return errorResponse(res, 422, 'id is Required!');
-        if(!Product_Quantity) return errorResponse(res, 422, 'Product_Quantity is Required!');
-        if(!Order_Ship_Name) return errorResponse(res, 422, 'Order_Ship_Name is Required!');
-        if(!Order_Ship_Address) return errorResponse(res, 422, 'Order_Ship_Address is Required!');
-        if(!City) return errorResponse(res, 422, 'City is Required!');
-        if(!State) return errorResponse(res, 422, 'State is Required!');
-        if(!Zip) return errorResponse(res, 422, 'Zip is Required!');
-        if(!Country) return errorResponse(res, 422, 'Country is Required!');
-        if(!Phone) return errorResponse(res, 422, 'Phone is Required!');
-        if(!Email) return errorResponse(res, 422, 'Email is Required!');
-        if(!Order_Type) return errorResponse(res, 422, 'Order_Type is Required!');
-        try{
-            if(Order_Type == 'Product'){
-                const PRODUCT_DATA = await getProduct({_id: ID});
-                if(!PRODUCT_DATA) return errorResponse(res, 422, 'Product id is invalid!');
-                req.body.User_Id = req.user._id;
-                req.body.Order_Amount = PRODUCT_DATA.Price;
-                req.body.Products = [{
-                    Product_Id: PRODUCT_DATA._id, 
-                    Product_Quantity: Product_Quantity 
-                }];
-                const ORDER_DATA = await createOrder(req.body);
-                return succesResponse(res, 200, ORDER_DATA);
-            }
-        }catch(err){
-            return errorResponse(res, 422, err.message);
-        }
-    },
-    
-    /** function for get all user order */
-    async getAllOrder(req, res){
-        try{
-            const ORDERS_DATA = await getAllOrder({ User_Id: req.user._id });
-            if(!ORDERS_DATA) return errorResponse(res, 422, 'you have no order!');
-            return succesResponse(res, 200, ORDERS_DATA);
-        }catch(err){
-            return errorResponse(res, 422, err.message);
-        }
-    },
-
-    /** function for get all user order */
-    async createCart(req, res){
-        try{
-            const ORDERS_DATA = await getAllOrder({ User_Id: req.user._id });
-            if(!ORDERS_DATA) return errorResponse(res, 422, 'you have no order!');
-            return succesResponse(res, 200, ORDERS_DATA);
-        }catch(err){
-            return errorResponse(res, 422, err.message);
-        }
-    },
-
-    
 }

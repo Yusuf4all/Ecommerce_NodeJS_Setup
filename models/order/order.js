@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const ORDER_DETAILS_SCHEMA = new mongoose.Schema({
-    Product_Id: { type: String },
-    Product_Quantity: { type: Number },
-    Created_At: { type: Date, default: Date.now }
-});
+// const ORDER_DETAILS_SCHEMA = new mongoose.Schema({
+//     Product_Id: { type: String },
+//     Product_Quantity: { type: Number },
+//     Created_At: { type: Date, default: Date.now }
+// });
 
 const ORDER_SCHEMA = new mongoose.Schema({
     User_Id: { type: String },
@@ -19,10 +19,12 @@ const ORDER_SCHEMA = new mongoose.Schema({
     Phone: { type: String },
     Fax: { type: String },
     Email: { type: String },
-    Order_Status: { type: String, default: 'Active' },
+    Order_Status: { type: String, default: 'Draft' },
     Order_Type: { type: String },
-    is_Active: { type: Boolean, default: true },
-    Products: [ORDER_DETAILS_SCHEMA],
+    is_Active: { type: Boolean, default: false },
+    Payment_Id: { type: String },
+    Payment_Type: { type: String },
+    Products: { type: [String], default: [] },
     Created_At: { type: Date, default: Date.now }
 });
 

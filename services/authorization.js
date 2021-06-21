@@ -1,7 +1,7 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unreachable */
 const secret = process.env.JWT_SECRET
-const expressJwt = require('express-jwt')
+const expressJwt = require('express-jwt');
 const { userModule: { getUser }, adminModule: { getAdmin }  } = require('../models')
 module.exports = authorize
 

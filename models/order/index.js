@@ -10,5 +10,15 @@ ORDER_MODULE.getAllOrder = async function(data){
     return await ORDER_MODEL.find(data);
 }
 
+ORDER_MODULE.getOrder = async function(data){
+    return await ORDER_MODEL.findOne(data);
+}
+
+ORDER_MODULE.updateOrder = async function(id, data){
+    return await ORDER_MODEL.updateOne({_id: id}, data);
+}
+
+
+
 
 module.exports = ORDER_MODULE;
