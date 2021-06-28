@@ -2,7 +2,12 @@
 /* eslint-disable no-unreachable */
 const secret = process.env.JWT_SECRET
 const expressJwt = require('express-jwt');
-const { userModule: { getUser }, adminModule: { getAdmin }  } = require('../models')
+const { 
+	userModule: { getUser },
+	adminModule: { getAdmin },
+	supplierModule: { getSupplier }
+} = require('../models')
+
 module.exports = authorize
 
 function authorize (roles = []) {
@@ -42,7 +47,22 @@ function authorize (roles = []) {
 						} else {
 							return res
 								.status(404)
-								.json({ message: 'User Not Found' })
+								.json({ message: 'Admin Not Found' })
+						}
+					}
+				)
+				break
+			case 'Supplier':
+				getSupplier({Email: req.user.Email}).then(
+					user => {
+						if (user) {
+							req.user = user
+							req.userType = 'Supplier'
+							next()
+						} else {
+							return res
+								.status(404)
+								.json({ message: 'Supplier Not Found' })
 						}
 					}
 				)

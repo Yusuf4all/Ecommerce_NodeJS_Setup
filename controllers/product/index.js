@@ -5,18 +5,18 @@ module.exports = {
     /** function for save one product */
     async addProduct(req, res){
         const CATEGORY_ID = req.params.category_id;
-        console.log("CATEGORY_ID: ",CATEGORY_ID);
         const {Product_Name, Product_Short_Desc, Product_Long_Desc, Price} = req.body;
         if(!CATEGORY_ID) return errorResponse(res, 422, 'Category_Id is Required!');
         if(!Product_Name) return errorResponse(res, 422, 'Product_Name is Required!');
         if(!Product_Short_Desc) return errorResponse(res, 422, 'Product_Short_Desc is Required!');
         if(!Product_Long_Desc) return errorResponse(res, 422, 'Product_Long_Desc is Required!');
         if(!Price) return errorResponse(res, 422, 'Price is Required!');
-        if(!req.body.Inventory.Total_Quantity) return errorResponse(res, 422, 'Total_Quantity is Required!')
+        if(!req.body.Inventory.Total_Quantity) return errorResponse(res, 422, 'Inventory data is Required!')
         try{
-            const PRODUCT = await getProduct({Product_Name: Product_Name});
+            const PRODUCT = await getProduct({ $and: [{ Product_Name: Product_Name },{ Supplier_Id: req.user._id }] });
             if(!PRODUCT){
                 req.body.Inventory.Created_At = new Date();
+                req.body.Supplier_Id = req.user._id;
                 if(!req.body.Discount){
                     const SAVE_PRODUCT = await saveProduct(req.body);
                     return succesResponse(res, 200, { message:'Add product successfully.',Prodct: SAVE_PRODUCT });
@@ -39,7 +39,7 @@ module.exports = {
         const PRODUCT_ID = req.params.product_id;
         if(!PRODUCT_ID) return errorResponse(res, 422, 'Product_Id is Required!');
         try{
-            const PRODUCT = await getProduct({_id: PRODUCT_ID});
+            const PRODUCT = await getProduct({ $and: [{ _id: PRODUCT_ID },{ Supplier_Id: req.user._id } ] });
             if(!PRODUCT) return errorResponse(res, 422, 'invalid given project id');
             req.body.Updated_At = Date.now();
             await updateProduct(PRODUCT_ID, req.body);
@@ -63,7 +63,6 @@ module.exports = {
     /** function for add and update review */
     async addUpdateReview(req, res){
         const PRODUCT_ID = req.params.product_id;
-        console.log(PRODUCT_ID)
         if(!PRODUCT_ID) return errorResponse(res, 422, 'product_id is Required!')
         if(!req.body.Review) return errorResponse(res, 422, 'Review is Required!');
         if(req.body.Review > 5) return errorResponse(res, 422, 'Review is less the 5!');

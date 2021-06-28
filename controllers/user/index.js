@@ -4,7 +4,7 @@ const { errorResponse, succesResponse } = require('../../services/response');
 const { bcryptHash, bcryptVerify } = require('../../services/crypto');
 const { jwtSign, jwtVerify } = require('../../services/jwt');
 const sendMail = require('../../services/send_mail');
-const getVerificationCode = require('../../services/random');
+const { getVerificationCode } = require('../../services/random');
 
 module.exports={
 

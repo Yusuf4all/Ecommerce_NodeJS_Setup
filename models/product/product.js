@@ -31,6 +31,7 @@ const PRODUCT_REVIEW_SCHEMA = new mongoose.Schema({
 /** this is product schema  */
 const PRODUCT_SCHEMA = new mongoose.Schema({
     Product_Name: { type: String },
+    Supplier_Id: { type: String },
     Product_Short_Desc: { type: String },
     Product_Long_Desc: { type: String },
     Price: { type: Number },

@@ -1,4 +1,7 @@
+const supplier = require("../models/supplier/supplier");
+
 module.exports= {
     Admin: 'Admin',
-    User: 'User'
+    User: 'User',
+    Supplier: 'Supplier'
 }

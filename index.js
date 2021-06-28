@@ -20,6 +20,8 @@ const ORDER_ROUTES = require('./routes/order');
 const CART_ROUTES = require('./routes/cart');
 const CATEGORY_ROUTES = require('./routes/category');
 const TRANSACTION_ROUTES = require('./routes/transaction');
+const SUPPLIER_ROUTES = require('./routes/supplier');
+const AVAILABILITY_ROUTES = require('./routes/availability');
 
 
 
@@ -36,6 +38,7 @@ app.use('/order', ORDER_ROUTES);
 app.use('/cart', CART_ROUTES);
 app.use('/category', CATEGORY_ROUTES);
 app.use('/transection', TRANSACTION_ROUTES);
-
+app.use('/supplier', SUPPLIER_ROUTES);
+app.use('/availability', AVAILABILITY_ROUTES);
 
 app.listen(process.env.PORT,()=>console.log('server running on port: ',process.env.PORT));
