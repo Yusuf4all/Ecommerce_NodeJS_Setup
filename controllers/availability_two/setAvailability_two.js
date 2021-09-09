@@ -1,5 +1,5 @@
 const { succesResponse, errorResponse } = require('../../services/response');
-const { saveAvailability, getAvailability , updateAvailability } = require('../../models').availabilityModule;
+const { saveAvailability, getAvailability, updateAvailability  } = require('../../models').availabilityTwoModule;
 const moment = require('moment');
 
 module.exports = {
@@ -98,7 +98,7 @@ async function createAvailability(slots, from_time, to_time, date, admin_id){
         from_time = from_time + 1;
         to_time = to_time + 13;
         await updateSlots( from_time, to_time, admin_id, slots, date );
-        return true;
+        return true; 
     }
     if(FROM_TIME_ZONE == 'pm' && TO_TIME_ZONE == 'am' && to_time == 0){
         console.log('99999999999999999999')
@@ -112,27 +112,22 @@ async function createAvailability(slots, from_time, to_time, date, admin_id){
 /** function for update slots */
 async function updateSlots(from_time, to_time, admin_id, slots, date ){
     let DATA = await getUpdatedSlot(from_time, to_time, slots);
-    let QUERY = { $and: [ {Date: date} , {Admin_Id: admin_id} ] }
-    await updateAvailability(QUERY, { Slots: DATA});
+    let QUERY = { Date: date, Admin_Id: admin_id }
+    await updateAvailability(QUERY, DATA);
 }
 
 /** finction for get update slots */
 async function getUpdatedSlot(from_time, to_time, slots){
     for(let i = 0 ; i < 24 ; i ++ ){
         if(i >= from_time - 1 && i < to_time - 1){
-            slots[i].Is_Available = true
+            slots[i].Is_Booked = false
+            slots[i].Is_Home_Available = true
+            slots[i].Is_Office_Available = true
         }else{
-            slots[i].Is_Available = false
+            slots[i].Is_Booked = false
+            slots[i].Is_Home_Available = false
+            slots[i].Is_Office_Available = false
         }
         if(i == 23) return slots
     }
 }
-
-// async function isDateAndTimeRight(date, from_time){
-//     let FROM_TIME_ZONE = from_time.slice(5, 7);
-//     from_time = from_time == 'pm' ? 
-//     const CURRENT_DATE = moment(new Date()).format();
-//     date = moment(date).format();
-//     if(CURRENT_DATE > DATE1) return errorResponse(res, 422, 'Please enter a valid date!')
-
-// }

@@ -6,6 +6,7 @@ const SLOT_BOOKING_SCHEMA = new mongoose.Schema({
     Supplier_Id: { type: String },
     Admin_Id: { type: String },
     Date: { type: String },
+    Availability_Type: { type: String },
     Status: { type: String, default: "Requested"},
     Created_At: { type: Date, default: Date.now }
 });

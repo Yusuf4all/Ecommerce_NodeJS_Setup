@@ -22,8 +22,8 @@ const CATEGORY_ROUTES = require('./routes/category');
 const TRANSACTION_ROUTES = require('./routes/transaction');
 const SUPPLIER_ROUTES = require('./routes/supplier');
 const AVAILABILITY_ROUTES = require('./routes/availability');
-
-
+const AVAILABILITY_TWO_ROUTES = require('./routes/availability_two');
+const conversationRoute = require('./routes/conversation')
 
 
 mongoose.connect(process.env.MONGOURL,{useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
@@ -40,5 +40,8 @@ app.use('/category', CATEGORY_ROUTES);
 app.use('/transection', TRANSACTION_ROUTES);
 app.use('/supplier', SUPPLIER_ROUTES);
 app.use('/availability', AVAILABILITY_ROUTES);
+app.use('/availability-two', AVAILABILITY_TWO_ROUTES);
+app.use('/conversation', conversationRoute);
+
 
 app.listen(process.env.PORT,()=>console.log('server running on port: ',process.env.PORT));

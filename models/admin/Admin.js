@@ -5,6 +5,7 @@ const ADMIN_SCHEMA = new mongoose.Schema({
     Last_Name: { type: String },
     Email: { type: String },
     Password: { type: String },
+    Regular_Hours_Amount: { type: String},
     Created_At: { type: Date, default: Date.now }
 });
 

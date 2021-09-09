@@ -10,5 +10,9 @@ module.exports={
     transactionModule: require('./transaction'),
     supplierModule: require('./supplier'),
     availabilityModule: require('./availability'),
-    slotBookingModule: require('./slotBooking')
+    slotBookingModule: require('./slotBooking'),
+    availabilityTwoModule: require('./availability_two'),
+    conversationModule: require('./conversation'),
+    messageModule: require('./message')
+
 }

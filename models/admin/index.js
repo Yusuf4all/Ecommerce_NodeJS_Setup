@@ -13,9 +13,9 @@ ADMIN_MODULE.saveAdmin = async function(data){
 }
 
 // /** function for find admin */
-// ADMIN_MODULE.saveAdmin = async function(data){
-//     return await new ADMIN_MODEL(data).save();
-// }
+ADMIN_MODULE.saveAdmin = async function(data){
+    return await new ADMIN_MODEL(data).save();
+}
 
 
 module.exports = ADMIN_MODULE;
